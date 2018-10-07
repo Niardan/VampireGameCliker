@@ -1,0 +1,114 @@
+﻿<Window x:Class="Vampire_Life_Game_Clicker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Vampire_Life_Game_Clicker"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500
+        " Width="525" MouseMove="Window_MouseMove" Closed="MainWindow_OnClosed">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <WrapPanel Grid.Row="0">
+            <Label>Сундук:</Label>
+            <Button Click="Button_Click">Инициализация</Button>
+            <Button Name="ChestStartGame" Click="ChestStartGame_OnClick" Margin="5" Padding="5">Start</Button>
+        </WrapPanel>
+        <Border  Grid.Row="1" BorderBrush="Black" BorderThickness="3">
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Label>Кнопка автоматического открытия сундука: Q</Label>
+                <Border Grid.Row="1" BorderThickness="2" BorderBrush="Black">
+                    <WrapPanel>
+                        <StackPanel Margin="10,0">
+                            <Label HorizontalAlignment="Center">Лево</Label>
+                            <Image Height="50" Width="50" Name="LeftArrow"></Image>
+                        </StackPanel>
+                        <StackPanel  Margin="10,0">
+                            <Label HorizontalAlignment="Center">Право</Label>
+                            <Image Height="50" Width="50" Name="RightArrow"></Image>
+                        </StackPanel>
+                        <StackPanel Margin="10,0">
+                            <Label HorizontalAlignment="Center">Вверх</Label>
+                            <Image Height="50" Width="50" Name="UpArrow"></Image>
+                        </StackPanel>
+                        <StackPanel Margin="10,0">
+                            <Label HorizontalAlignment="Center">Вниз</Label>
+                            <Image Height="50" Width="50" Name="DownArrow"></Image>
+                        </StackPanel>
+                    </WrapPanel>
+                </Border>
+                <StackPanel Grid.Row ="2">
+                    <WrapPanel>
+                        <Label>Размер ячейки:</Label>
+                        <Label Name ="SizeChestCell">50</Label>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label>Коордианты левого верхнего угла:</Label>
+                        <Label Name ="PositionChestCell">50</Label>
+                        <Button Name ="ChestFrameButton" Click="ChestFrameButton_Click">Отобразить рамку</Button>
+                    </WrapPanel>
+
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <WrapPanel Grid.Row="2">
+            <Label>Кровь:</Label>
+            <Button Name="BloodInitiationButton" Click="BloodInitiationButton_Click" Margin="5">Инициализация</Button>
+            <Button Name="BloodStartGame" Click="BloodStartGame_OnClick" Margin="5" Padding="5">Start</Button>
+        </WrapPanel>
+        <Border BorderBrush="Black" BorderThickness="3" Grid.Row="3">
+            <StackPanel>
+                <WrapPanel Grid.Row="2">
+                    <Label>Координаты левого угла игрового поля :</Label>
+                    <Label Name ="LeftUpBloodPole">50</Label>
+                </WrapPanel>
+                <WrapPanel Grid.Row="2">
+                    <Label>Размер ячейки:</Label>
+                    <Label Name ="CellSizeBloodPole">50</Label>
+                </WrapPanel>
+                <WrapPanel Grid.Row="2">
+                    <Label>Ячеек по горизонтали:</Label>
+                    <Label Name ="CountHorCellBloodPole">50</Label>
+                    <Label>Ячеек по вертикали:</Label>
+                    <Label Name ="CountVertCellBloodPole">50</Label>
+                </WrapPanel>
+                <Button>Отобразить рамку</Button>
+                <WrapPanel>
+                    <StackPanel>
+                        <CheckBox Name="VioletBlood" Click="VioletBlood_Click">Фиолетовая кровь</CheckBox>
+                        <Label Name="VioletBloodCollor" Height="20" Width="20"></Label>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox Name="BlueBlood" Click="BlueBlood_Click">Синяя кровь</CheckBox>
+                        <Label Name="BlueBloodCollor" Height="20" Width="20"></Label>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox Name="BlackBlood" Click="BlackBlood_Click">Черная кровь</CheckBox>
+                        <Label Name="BlackBloodCollor" Height="20" Width="20"></Label>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox Name="GreenBlood" Click="GreenBlood_Click">Зеленая кровь</CheckBox>
+                        <Label Name="GreenBloodCollor" Height="20" Width="20"></Label>
+                    </StackPanel>
+                    <StackPanel>
+                        <CheckBox Name="OrangeBlood" Click="OrangeBlood_Click">Оранжевая кровь</CheckBox>
+                        <Label Name="OrangeBloodCollor" Height="20" Width="20"></Label>
+                    </StackPanel>
+                </WrapPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
