@@ -69,6 +69,13 @@
     <Compile Include="Module.xaml.cs">
       <DependentUpon>Module.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NewBloodGame\BloodGame.cs" />
+    <Compile Include="NewChestGame\ChestGameInit.cs" />
+    <Compile Include="Common\Pixel.cs" />
+    <Compile Include="NewChestGame\Sides.cs" />
+    <Compile Include="NewChestGame\ViewChestInit.xaml.cs">
+      <DependentUpon>ViewChestInit.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SaveData.cs" />
     <Compile Include="UserActivityHook.cs" />
     <Compile Include="WinApiClass.cs" />
@@ -89,6 +96,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Module.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewChestGame\ViewChestInit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -119,5 +130,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

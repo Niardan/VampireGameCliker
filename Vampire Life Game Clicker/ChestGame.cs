@@ -41,10 +41,10 @@ namespace Vampire_Life_Game_Clicker
       
         public void Activate()
         {
-            _imageWorker.GetBufer(_saveData.UpArrowImage, out _imageUpBuffer);
-            _imageWorker.GetBufer(_saveData.DownArrowImage, out _imageDownBuffer);
-            _imageWorker.GetBufer(_saveData.LeftArrowImage, out _imageLeftBuffer);
-            _imageWorker.GetBufer(_saveData.RightArrowImage, out _imageRightBuffer);
+            _imageUpBuffer = _imageWorker.GetBufer(_saveData.UpArrowImage);
+            _imageDownBuffer = _imageWorker.GetBufer(_saveData.DownArrowImage);
+            _imageLeftBuffer = _imageWorker.GetBufer(_saveData.LeftArrowImage);
+            _imageRightBuffer =  _imageWorker.GetBufer(_saveData.RightArrowImage);
 
             _actHook.KeyDown += _actHook_KeyDown;
             _actHook.Start();
@@ -57,11 +57,11 @@ namespace Vampire_Life_Game_Clicker
             if (e.KeyData == Keys.Space)
             {
                  _countClick++;
-                byte[] image;
+               
                 var leftPoint = _saveData.ChestLeftPoint;
                 var size = _saveData.ChestSizeCell;
                 var screenImage = _imageWorker.GetImage(null, leftPoint.X, leftPoint.Y, leftPoint.X + size, leftPoint.Y + size);
-                _imageWorker.GetBufer(screenImage, out image);
+                byte[] image = _imageWorker.GetBufer(screenImage);
                  if (_imageWorker.Compareimages(_imageDownBuffer, image))
                 {
                        _key = _down;

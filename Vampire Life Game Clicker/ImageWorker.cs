@@ -44,27 +44,40 @@ namespace Vampire_Life_Game_Clicker
             {
                 g.CopyFromScreen(Point.Empty, Point.Empty, ScreenSize);
 
-                newImage = ResizeImage(image,(int) x,(int) y,(int) xRight,(int) yDown);
+                newImage = ResizeImage(image, (int)x, (int)y, (int)xRight, (int)yDown);
             }
             return newImage;
+        }
+        public Image GetScreenImage()
+        {
+            Size screenSize = Screen.PrimaryScreen.Bounds.Size;
+            Bitmap image = new Bitmap(screenSize.Width, screenSize.Height);
+            Image newImage;
+            using (Graphics g = Graphics.FromImage(image))
+            {
+                g.CopyFromScreen(Point.Empty, Point.Empty, screenSize);
+            }
+            return image;
         }
 
         public Color GetPixelColor(Point point)
         {
             Image image = GetImage("pixel", point.X, point.Y, point.X + 20, point.Y + 20);
-            byte[] buffer;
-            GetBufer(image, out buffer);
+
+            byte[] buffer = GetBufer(image);
             return Color.FromArgb(buffer[3], buffer[2], buffer[1], buffer[0]);
         }
 
-        public void GetBufer(Image image, out byte[] _imageBuffer)
+        public byte[] GetBufer(Image image)
         {
+            byte[] imageBuffer;
             Bitmap first = image as Bitmap;
             BitmapData datefirst = first.LockBits(new Rectangle(0, 0, first.Width, first.Height), ImageLockMode.ReadOnly, first.PixelFormat);
             int size1 = datefirst.Stride * datefirst.Height;
-            _imageBuffer = new byte[size1];
-            Marshal.Copy(datefirst.Scan0, _imageBuffer, 0, _imageBuffer.Length);
+            imageBuffer = new byte[size1];
+            Marshal.Copy(datefirst.Scan0, imageBuffer, 0, imageBuffer.Length);
             first.UnlockBits(datefirst);
+            return imageBuffer;
         }
 
         public ImageSource GetImageSource(Image image)

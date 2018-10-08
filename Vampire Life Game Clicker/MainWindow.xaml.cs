@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Vampire_Life_Game_Clicker.NewChestGame;
 using Color = System.Windows.Media.Color;
 
 namespace Vampire_Life_Game_Clicker
@@ -49,6 +50,8 @@ namespace Vampire_Life_Game_Clicker
                 ChestLoad();
                 BloodLoad();
             }
+
+            var init = new ChestGameInit(_imageWorker, _actHook, _apiClass);
         }
 
         private void ActHook_MouseActions(MouseAction action, int x, int y)

@@ -47,8 +47,7 @@ namespace Vampire_Life_Game_Clicker
             var image = _imageWorker.GetImage("test", point.X, point.Y, point.X + size * _saveData.CoutCellHor, point.Y + size * _saveData.CountCellVert);
 
             Point point1;
-            byte[] buffer;
-            _imageWorker.GetBufer(image, out buffer);
+            byte[] buffer = _imageWorker.GetBufer(image);
             byte[] pixel;
             if (CheckFullImage(buffer, _pixels, out point1, out pixel))
             {
@@ -56,8 +55,7 @@ namespace Vampire_Life_Game_Clicker
                 var yPoint = (int)point.Y + size * point1.Y + size / 2;
                 _apiClass.SetCursorPosition(xPoint, yPoint);
                 var pixelImage = _imageWorker.GetImage("test1", xPoint, yPoint, xPoint +1, yPoint + 1);
-                byte[] bufferPixel;
-                _imageWorker.GetBufer(pixelImage, out bufferPixel);
+                byte[] bufferPixel = _imageWorker.GetBufer(pixelImage);
                 if (CheckPixel(bufferPixel, pixel, 20))
                 {
                     _apiClass.PressLeftMouse();
