@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Vampire_Life_Game_Clicker
+namespace Vampire_Life_Game_Clicker.Common
 {
     /// <summary>
     /// This class allows you to tap keyboard and mouse and / or to detect their activity even when an 

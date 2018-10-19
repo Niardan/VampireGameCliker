@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+using System.Windows.Forms;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
+using Vampire_Life_Game_Clicker.ChestClicker;
+using Vampire_Life_Game_Clicker.Common;
+using Vampire_Life_Game_Clicker.NewBloodGame;
 using Vampire_Life_Game_Clicker.NewChestGame;
 using Color = System.Windows.Media.Color;
+using MouseAction = Vampire_Life_Game_Clicker.Common.MouseAction;
 
 namespace Vampire_Life_Game_Clicker
 {
@@ -24,34 +16,187 @@ namespace Vampire_Life_Game_Clicker
     /// </summary>
     public partial class MainWindow : Window
     {
-        DispatcherTimer _timer = new DispatcherTimer();
-        private FrameForm _form;
-        UserActivityHook _actHook;
-        private SaveData _saveData;
-        private ImageWorker _imageWorker;
-        private WinApiClass _apiClass = new WinApiClass();
-        private BloodGame _bloodGame;
-        private ChestGame _chestGame;
-        private double _x;
-        private double _y;
-
-        private bool _frameStart;
+        private readonly FrameForm _form;
+        private readonly UserActivityHook _actHook;
+        private readonly SaveData _saveData;
+        private readonly ImageWorker _imageWorker;
+        private readonly WinApiClass _apiClass = new WinApiClass();
+        private readonly BloodGame _bloodGame;
+        private readonly ChestGame _chestGame;
+        private readonly ChestClick _chestClicker;
+        private bool _isOverlay = true;
+        private Point _currenntPoint;
+        private readonly Timer _timer = new Timer();
 
         public MainWindow()
         {
             InitializeComponent();
+            _timer.Interval = 100;
+            _timer.Tick+=TimerOnTick;
+            _timer.Start();
             _imageWorker = new ImageWorker(this);
             _form = new FrameForm();
             _actHook = new UserActivityHook();
-            _actHook.OnMouseActivity += new System.Windows.Forms.MouseEventHandler(MouseMoved);
+            _actHook.OnMouseActivity += MouseMoved;
             _actHook.MouseActions += ActHook_MouseActions;
+            _actHook.KeyDown += ActHookOnKeyDown;
+            _actHook.Start();
             if (SaveData.Load(out _saveData))
             {
-                ChestLoad();
                 BloodLoad();
             }
 
-            var init = new ChestGameInit(_imageWorker, _actHook, _apiClass);
+            _bloodGame = new BloodGame(_imageWorker, _actHook, _apiClass, _saveData, _form);
+            _bloodGame.Activated += BloodGameOnActivated;
+            _bloodGame.Deactivated += BloodGameOnDeactivated;
+            _chestGame = new ChestGame(_imageWorker, _actHook, _apiClass, _saveData, _form);
+            _chestGame.Activated += ChestGameOnActivated;
+            _chestGame.Deactivated += ChestGameOnDeactivated;
+            _chestClicker = new ChestClick(_imageWorker, _actHook, _apiClass, _saveData, _form);
+            _chestClicker.Activated+=ChestClickerOnActivated;
+            _chestClicker.Deactivated+=ChestClickerOnDeactivated;
+            BloodStartGame.Background = System.Windows.Media.Brushes.Gray;
+            ActivateChest.Background = System.Windows.Media.Brushes.Gray;
+            ActivateChestClick.Background = System.Windows.Media.Brushes.Gray;
+            _form.Show();
+        }
+
+        private void TimerOnTick(object sender, EventArgs e)
+        {
+            string activeName = _apiClass.GetActiveWindowName();
+            if (!_isOverlay )
+            {
+                if (activeName == "VampireLife")
+                {
+                    _currenntPoint = _apiClass.GetActiveWindowCoord();
+                    _isOverlay = true;
+                    SetOverlay(_isOverlay);
+                    var point = _apiClass.GetActiveWindowCoord();
+                    SetOverlayPosition(point);
+                }
+            }
+            else
+            {
+                if (activeName != "VampireLife")
+                {
+                    _isOverlay = false;
+                    SetOverlay(false);
+
+                }
+                else
+                {
+                    var point = _apiClass.GetActiveWindowCoord();
+                    if (_currenntPoint != point)
+                    {
+                        SetOverlayPosition(point);
+                    }
+                }
+            }
+        }
+
+        private void SetOverlay(bool active)
+        {
+            _form.SetOverlayEnabled(active);
+        }
+
+        private void SetOverlayPosition(Point point)
+        {
+            _form.SetPosition(point);
+        }
+
+        private void ChestClickerOnDeactivated(BaseGame sender)
+        {
+            ActivateChestClick.Background = System.Windows.Media.Brushes.Gray;
+        }
+
+        private void ChestClickerOnActivated(BaseGame sender)
+        {
+            ActivateChestClick.Background = System.Windows.Media.Brushes.Green;
+        }
+
+        private void ActHookOnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Oem3)
+            {
+                if (!_form.IsVisible)
+                {
+                    _isOverlay = true;
+                    _form.Show();
+                }
+                else
+                {
+                    _isOverlay = false;
+                    _form.Hide();
+                }
+            }
+            if (e.KeyData == Keys.D1)
+            {
+                StartBloodGame();
+            }
+            if (e.KeyData == Keys.D2)
+            {
+                StartChestGame();
+            }
+            if (e.KeyData == Keys.D3)
+            {
+                StartChestClicker();
+            }
+            if (e.KeyData == Keys.D5)
+            {
+                _chestGame.Deactivate();
+                _bloodGame.Deactivate();
+                _chestClicker.Deactivate();
+            }
+        }
+
+        private void StartBloodInitiation()
+        {
+            _chestGame.Deactivate();
+            _bloodGame.Deactivate();
+            _form.Show();
+            var init = new BloosInitiation(_form, _actHook, _saveData, _imageWorker);
+            init.EndInitiation += Init_BloodEndInitiation;
+        }
+
+        private void StartBloodGame()
+        {
+            _chestGame.Deactivate();
+            _chestClicker.Deactivate();
+            _bloodGame.Activate();
+        }
+
+        private void StartChestGame()
+        {
+            _bloodGame.Deactivate();
+            _chestClicker.Deactivate();
+            _chestGame.Activate();
+        }
+        private void StartChestClicker()
+        {
+            _chestGame.Deactivate();
+            _bloodGame.Deactivate();
+            _chestClicker.Activate();
+        }
+
+        private void ChestGameOnDeactivated(BaseGame sender)
+        {
+            ActivateChest.Background = System.Windows.Media.Brushes.Gray;
+        }
+
+        private void ChestGameOnActivated(BaseGame sender)
+        {
+            ActivateChest.Background = System.Windows.Media.Brushes.Green;
+
+        }
+
+        private void BloodGameOnDeactivated(BaseGame sender)
+        {
+            BloodStartGame.Background = System.Windows.Media.Brushes.Gray;
+        }
+
+        private void BloodGameOnActivated(BaseGame sender)
+        {
+            BloodStartGame.Background = System.Windows.Media.Brushes.Green;
         }
 
         private void ActHook_MouseActions(MouseAction action, int x, int y)
@@ -63,186 +208,93 @@ namespace Vampire_Life_Game_Clicker
 
         }
 
-        private void Window_MouseMove(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            _form.Show();
-            var init = new ChestInitiation(_form, _actHook, _saveData, _imageWorker);
-            init.EndInitiation += Init_EndInitiation;
-        }
-
-        private void Init_EndInitiation(Initiation sender)
-        {
-            sender.EndInitiation -= Init_EndInitiation;
-            _form.Hide();
-            ChestLoad();
-        }
-
         private void Init_BloodEndInitiation(Initiation sender)
         {
-            sender.EndInitiation -= Init_EndInitiation;
-            _form.Hide();
+            sender.EndInitiation -= Init_BloodEndInitiation;
+
             BloodLoad();
-        }
-
-        private void ChestLoad()
-        {
-            LeftArrow.Source = _imageWorker.GetImageSource(_saveData.LeftArrowImage);
-            RightArrow.Source = _imageWorker.GetImageSource(_saveData.RightArrowImage);
-            UpArrow.Source = _imageWorker.GetImageSource(_saveData.UpArrowImage);
-            DownArrow.Source = _imageWorker.GetImageSource(_saveData.DownArrowImage);
-            SizeChestCell.Content = _saveData.ChestSizeCell.ToString();
-            PositionChestCell.Content = _saveData.ChestLeftPoint.ToString();
-        }
-
-        public void SetImage(Image image)
-        {
-            LeftArrow.Source = _imageWorker.GetImageSource(image);
         }
 
         private void BloodLoad()
         {
-            LeftUpBloodPole.Content = _saveData.BloodStartPoint.ToString();
-            CellSizeBloodPole.Content = _saveData.BloodSizeCell.ToString();
-            CountHorCellBloodPole.Content = _saveData.CoutCellHor.ToString();
-            CountVertCellBloodPole.Content = _saveData.CountCellVert.ToString();
-
             var color = _saveData.GetColor("violet").Pixels;
             VioletBloodCollor.Background = new SolidColorBrush(Color.FromArgb(color[3], color[2], color[1], color[0]));
-            color = _saveData.GetColor("black").Pixels;
-            BlackBloodCollor.Background = new SolidColorBrush(Color.FromArgb(color[3], color[2], color[1], color[0]));
             color = _saveData.GetColor("green").Pixels;
             GreenBloodCollor.Background = new SolidColorBrush(Color.FromArgb(color[3], color[2], color[1], color[0]));
             color = _saveData.GetColor("orange").Pixels;
             OrangeBloodCollor.Background = new SolidColorBrush(Color.FromArgb(color[3], color[2], color[1], color[0]));
-            color = _saveData.GetColor("blue").Pixels;
-            BlueBloodCollor.Background = new SolidColorBrush(Color.FromArgb(color[3], color[2], color[1], color[0]));
-            BlackBlood.IsChecked = _saveData.GetColor("black").Check;
+
             GreenBlood.IsChecked = _saveData.GetColor("green").Check;
             VioletBlood.IsChecked = _saveData.GetColor("violet").Check;
             OrangeBlood.IsChecked = _saveData.GetColor("orange").Check;
-            BlueBlood.IsChecked = _saveData.GetColor("blue").Check;
-        }
-
-
-        private void ChestFrameButton_Click(object sender, RoutedEventArgs e)
-        {
-            var point = _saveData.ChestLeftPoint;
-            var size = _saveData.ChestSizeCell;
-            _form.Show();
-            _form.SetNewCoord(point.X, point.Y, point.X + size, point.Y + size);
-            _timer.Interval = new TimeSpan(0, 0, 2);
-            _timer.Tick += _timerChest_Tick;
-            _timer.Start();
-        }
-
-        private void _timerChest_Tick(object sender, EventArgs e)
-        {
-            _timer.Stop();
-            _timer.Tick -= _timerChest_Tick;
-            _form.Hide();
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs e)
         {
             _form.Close();
+            Environment.Exit(0);
         }
 
         private void BloodInitiationButton_Click(object sender, RoutedEventArgs e)
         {
-            _form.Show();
-            var init = new BloosInitiation(_form, _actHook, _saveData, _imageWorker);
-            init.EndInitiation += Init_BloodEndInitiation;
+            StartBloodInitiation();
         }
 
         private void BloodStartGame_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_bloodGame == null)
+            if (!_bloodGame.IsActive)
             {
-                _bloodGame = new BloodGame(_actHook, _saveData, _apiClass, _imageWorker, _form);
-                _bloodGame.Activate();
-                BloodStartGame.Background = System.Windows.Media.Brushes.Green;
+                StartBloodGame();
             }
             else
             {
                 _bloodGame.Deactivate();
-                _bloodGame = null;
-                BloodStartGame.Background = System.Windows.Media.Brushes.Gray;
             }
 
-        }
-
-        private void OrangeBlood_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void GreenBlood_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void BlackBlood_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void VioletBlood_Checked(object sender, RoutedEventArgs e)
-        {
         }
 
         private void GreenBlood_Click(object sender, RoutedEventArgs e)
         {
             _saveData.SetBloodChecked("green", GreenBlood.IsChecked.Value);
             SaveData.Save(_saveData);
-            if (_bloodGame != null) _bloodGame.RefreshScanColor();
+            if (_bloodGame.IsActive) _bloodGame.RefreshScanColor();
         }
 
         private void OrangeBlood_Click(object sender, RoutedEventArgs e)
         {
             _saveData.SetBloodChecked("orange", OrangeBlood.IsChecked.Value);
             SaveData.Save(_saveData);
-            if (_bloodGame != null) _bloodGame.RefreshScanColor();
-        }
-
-        private void BlackBlood_Click(object sender, RoutedEventArgs e)
-        {
-            _saveData.SetBloodChecked("black", BlackBlood.IsChecked.Value);
-            SaveData.Save(_saveData);
-            if (_bloodGame != null) _bloodGame.RefreshScanColor();
+            if (_bloodGame.IsActive) _bloodGame.RefreshScanColor();
         }
 
         private void VioletBlood_Click(object sender, RoutedEventArgs e)
         {
             _saveData.SetBloodChecked("violet", VioletBlood.IsChecked.Value);
             SaveData.Save(_saveData);
-            if (_bloodGame != null) _bloodGame.RefreshScanColor();
+            if (_bloodGame.IsActive) _bloodGame.RefreshScanColor();
         }
 
-        private void BlueBlood_Click(object sender, RoutedEventArgs e)
+        private void ActivateChest_OnClick(object sender, RoutedEventArgs e)
         {
-            _saveData.SetBloodChecked("blue", BlueBlood.IsChecked.Value);
-            SaveData.Save(_saveData);
-            if (_bloodGame != null) _bloodGame.RefreshScanColor();
-        }
-
-        private void ChestStartGame_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (_chestGame == null)
+            if (!_chestGame.IsActive)
             {
-                _chestGame = new ChestGame(_actHook, _apiClass, _saveData, _imageWorker);
-                _chestGame.Activate();
-                ChestStartGame.Background = System.Windows.Media.Brushes.Green;
+                StartChestGame();
             }
             else
             {
                 _chestGame.Deactivate();
-                _chestGame = null;
-                ChestStartGame.Background = System.Windows.Media.Brushes.Gray;
+            }
+        }
+
+        private void ActivateChestClick_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!_chestClicker.IsActive)
+            {
+                StartChestClicker();
+            }
+            else
+            {
+                _chestClicker.Deactivate();
             }
         }
     }

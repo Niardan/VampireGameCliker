@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Vampire_Life_Game_Clicker.Common;
 using Color = System.Drawing.Color;
 
 namespace Vampire_Life_Game_Clicker
@@ -35,8 +36,9 @@ namespace Vampire_Life_Game_Clicker
             return cropBmp;
         }
 
-        public Image GetImage(string name, double x, double y, double xRight, double yDown)
+        public Image GetImage(double x, double y, double xRight, double yDown)
         {
+
             Size ScreenSize = Screen.PrimaryScreen.Bounds.Size;
             Bitmap image = new Bitmap(ScreenSize.Width, ScreenSize.Height);
             Image newImage;
@@ -62,10 +64,17 @@ namespace Vampire_Life_Game_Clicker
 
         public Color GetPixelColor(Point point)
         {
-            Image image = GetImage("pixel", point.X, point.Y, point.X + 20, point.Y + 20);
+            Image image = GetImage(point.X, point.Y, point.X + 1, point.Y + 1);
 
             byte[] buffer = GetBufer(image);
             return Color.FromArgb(buffer[3], buffer[2], buffer[1], buffer[0]);
+        }
+
+        public Pixel GetPixel(Point point)
+        {
+            Image image = GetImage(point.X, point.Y, point.X + 1, point.Y + 1);
+            byte[] buffer = GetBufer(image);
+            return new Pixel(buffer[0], buffer[1], buffer[2], buffer[3]);
         }
 
         public byte[] GetBufer(Image image)
@@ -116,6 +125,22 @@ namespace Vampire_Life_Game_Clicker
             }
 
             return missing < 20;
+        }
+
+        public Pixel[,] GetToBuffer(Image image)
+        {
+            var buffer = GetBufer(image);
+            var toBuffer = new Pixel[image.Width, image.Height];
+            int z = 0;
+            for (int i = 0; i < image.Height; i++)
+            {
+                for (int j = 0; j < image.Width; j++)
+                {
+                    toBuffer[j, i] = new Pixel(buffer[z], buffer[z + 1], buffer[z + 2], buffer[z + 3]);
+                    z += 4;
+                }
+            }
+            return toBuffer;
         }
 
     }

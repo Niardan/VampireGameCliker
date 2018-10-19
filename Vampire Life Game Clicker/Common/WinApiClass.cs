@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Forms;
 
-namespace Vampire_Life_Game_Clicker
+namespace Vampire_Life_Game_Clicker.Common
 {
     public struct MyKeys
     {
@@ -14,6 +17,14 @@ namespace Vampire_Life_Game_Clicker
         public short WkCode;
 
     }
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Rect
+    {
+        public int Left;        // x position of upper-left corner
+        public int Top;         // y position of upper-left corner
+        public int Right;       // x position of lower-right corner
+        public int Bottom;      // y position of lower-right corner
+    }
 
     public class WinApiClass
     {
@@ -25,6 +36,14 @@ namespace Vampire_Life_Game_Clicker
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint dwData, int dwExtraInfo);
+        [DllImport("User32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetWindowRect(IntPtr hWnd, out Rect lpRect);
 
         [StructLayout(LayoutKind.Sequential)]
         struct MOUSEINPUT
@@ -68,8 +87,8 @@ namespace Vampire_Life_Game_Clicker
             public HARDWAREINPUT hi;
         }
 
-        [System.Runtime.InteropServices.DllImportAttribute("user32.dll", EntryPoint = "SetCursorPos")]
-        [return: System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)]
+        [DllImport("user32.dll", EntryPoint = "SetCursorPos")]
+        [return: MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
         private static extern bool SetCursorPos(int X, int Y);
 
         [Flags]
@@ -84,6 +103,9 @@ namespace Vampire_Life_Game_Clicker
             RIGHTDOWN = 0x00000008,
             RIGHTUP = 0x00000010
         }
+        private static int dc = SystemInformation.CaptionHeight;
+        private static int dx = SystemInformation.FrameBorderSize.Width - 3;
+        private static int dy = SystemInformation.FrameBorderSize.Height - 3;
 
         const int KEYEVENTF_EXTENDEDKEY = 0x0001;
         const int KEYEVENTF_KEYUP = 0x0002;
@@ -121,6 +143,26 @@ namespace Vampire_Life_Game_Clicker
         public void SetCursorPosition(int x, int y)
         {
             SetCursorPos(x, y);
+        }
+
+        public string GetActiveWindowName()
+        {
+            IntPtr hWnd = GetForegroundWindow();
+            GetWindowThreadProcessId(hWnd, out var pid);
+            using (Process p = Process.GetProcessById(pid))
+            {
+                hWnd = IntPtr.Zero;
+                return p.ProcessName;
+            }
+        }
+
+        public Point GetActiveWindowCoord()
+        {
+            Rect rect;
+            GetWindowRect(GetForegroundWindow(), out rect);
+           // rect.Left += dx;
+            rect.Top += dy + dc;
+           return new Point(rect.Left, rect.Top);
         }
     }
 }

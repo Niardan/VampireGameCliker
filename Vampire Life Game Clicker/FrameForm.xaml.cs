@@ -32,20 +32,92 @@ namespace Vampire_Life_Game_Clicker
         public FrameForm()
         {
             InitializeComponent();
+            ShowInTaskbar = false;
             Topmost = true;
+            var colorBruses = Brushes.GreenYellow;
             this.Background = new SolidColorBrush(Color.FromArgb(0, 34, 34, 34));
-            _line1.Stroke = Brushes.Black;
+            _line1.Stroke = colorBruses;
             myCanvas.Children.Add(_line1);
-            _line2.Stroke = Brushes.Black;
+            _line2.Stroke = colorBruses;
             myCanvas.Children.Add(_line2);
-            _line3.Stroke = Brushes.Black;
+            _line3.Stroke = colorBruses;
             myCanvas.Children.Add(_line3);
-            _line4.Stroke = Brushes.Black;
+            _line4.Stroke = colorBruses;
             myCanvas.Children.Add(_line4);
+            BloodGame.Content = "Blood Game: Disable";
+            BloodGame.Foreground = Brushes.OrangeRed;
+            ChestGame.Content = "Chest Game: Disable";
+            ChestGame.Foreground = Brushes.OrangeRed;
+            ChestClicker.Content = "Chest Clicker: Disable";
+            ChestClicker.Foreground = Brushes.OrangeRed;
+        }
+
+        public void SetBloodGameActive(bool active)
+        {
+            if (active)
+            {
+                BloodGame.Content = "Blood Game: Enable";
+                BloodGame.Foreground = Brushes.GreenYellow;
+            }
+            else
+            {
+                BloodGame.Content = "Blood Game: Disable";
+                BloodGame.Foreground = Brushes.OrangeRed;
+            }
+        }
+
+        public void SetChestClickerActive(bool active)
+        {
+            if (active)
+            {
+                ChestClicker.Content = "Chest Clicker: Enable";
+                ChestClicker.Foreground = Brushes.GreenYellow;
+            }
+            else
+            {
+                ChestClicker.Content = "Chest Clicker: Disable";
+                ChestClicker.Foreground = Brushes.OrangeRed;
+            }
+        }
+
+        public void SetChestGameActive(bool active)
+        {
+            if (active)
+            {
+                ChestGame.Content = "Chest Game: Enable";
+                ChestGame.Foreground = Brushes.GreenYellow;
+            }
+            else
+            {
+                ChestGame.Content = "Chest Game: Disable";
+                ChestGame.Foreground = Brushes.OrangeRed;
+            }
+        }
+
+        public void SetOverlayEnabled(bool enabled)
+        {
+            if (enabled)
+            {
+                ChestGame.Visibility = Visibility.Visible;
+                ChestClicker.Visibility = Visibility.Visible;
+                BloodGame.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ChestGame.Visibility = Visibility.Hidden;
+                ChestClicker.Visibility = Visibility.Hidden;
+                BloodGame.Visibility = Visibility.Hidden;
+            }
 
         }
 
-        public void SetNewCoord(double x1, double y1, double x2, double y2)
+        public void SetPosition(Point point)
+        {
+            Canvas.SetLeft(PanelOverlay, point.X + 10);
+            Canvas.SetTop(PanelOverlay, point.Y);
+        }
+
+        public void SetNewRectangle(double x1, double y1, double x2, double y2)
         {
             //x1 += 7;
             //y1 += 7;
@@ -70,6 +142,31 @@ namespace Vampire_Life_Game_Clicker
             _line4.Y1 = y2;
             _line4.X2 = x2;
             _line4.Y2 = y2;
+        }
+
+        public void SetNewCross(double x1, double y1)
+        {
+            x1 += 6;
+            y1 += 6;
+            _line1.X1 = x1;
+            _line1.Y1 = y1 - 5;
+            _line1.X2 = x1;
+            _line1.Y2 = y1 + 5;
+
+            _line2.X1 = x1;
+            _line2.Y1 = y1 - 5;
+            _line2.X2 = x1;
+            _line2.Y2 = y1 + 5;
+
+            _line3.X1 = x1 - 5;
+            _line3.Y1 = y1;
+            _line3.X2 = x1 + 5;
+            _line3.Y2 = y1;
+
+            _line4.X1 = x1 - 5;
+            _line4.Y1 = y1;
+            _line4.X2 = x1 + 5;
+            _line4.Y2 = y1;
         }
 
         public void SetFormGrid(Point newPoint, int sizeCell, int countCellHor, int countCellVert)

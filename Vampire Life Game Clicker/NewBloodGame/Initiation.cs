@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using Vampire_Life_Game_Clicker.Common;
 
-namespace Vampire_Life_Game_Clicker
+namespace Vampire_Life_Game_Clicker.NewBloodGame
 {
     public delegate void InitInitiation(Initiation sender);
     public class Initiation
@@ -69,10 +69,7 @@ namespace Vampire_Life_Game_Clicker
 
         protected virtual void MouseMoved(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (_frameStart)
-            {
-                _frameForm.SetNewCoord(_x, _y, e.X, e.Y);
-            }
+            
         }
 
         protected void Deactivate()

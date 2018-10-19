@@ -9,8 +9,16 @@
         AllowsTransparency="True"
         WindowStyle="None" WindowState="Maximized">
     <Grid Name="RectGrid">
-        <Label Name="Message" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" Background="Transparent" Margin="0,50,0,0">Test</Label>
-        <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="myCanvas"/>
+
+        <Label Name="Message" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" Foreground="DeepSkyBlue" Background="Transparent" Margin="0,0,0,0"></Label>
+      
+        <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="myCanvas">
+            <StackPanel Name="PanelOverlay" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Label Name="BloodGame" FontSize="36">Blood Game:</Label>
+                <Label Name="ChestGame" FontSize="36">Blood Game:</Label>
+                <Label Name="ChestClicker" FontSize="36">ChestCliker:</Label>
+            </StackPanel>
+        </Canvas>
         <Image HorizontalAlignment="Left" VerticalAlignment="Center" Name="ImageForm"></Image>
     </Grid>
 </Window>

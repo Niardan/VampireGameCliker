@@ -56,29 +56,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BloodGame.cs" />
-    <Compile Include="BloosInitiation.cs" />
-    <Compile Include="ChestGame.cs" />
-    <Compile Include="ChestInitiation.cs" />
+    <Compile Include="ChestClicker\ChestClick.cs" />
+    <Compile Include="Common\BaseGame.cs" />
+    <Compile Include="NewBloodGame\BloosInitiation.cs" />
     <Compile Include="ColorData.cs" />
-    <Compile Include="Initiation.cs" />
+    <Compile Include="NewBloodGame\Initiation.cs" />
     <Compile Include="FrameForm.xaml.cs">
       <DependentUpon>FrameForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="ImageWorker.cs" />
-    <Compile Include="Module.xaml.cs">
-      <DependentUpon>Module.xaml</DependentUpon>
-    </Compile>
     <Compile Include="NewBloodGame\BloodGame.cs" />
-    <Compile Include="NewChestGame\ChestGameInit.cs" />
+    <Compile Include="NewChestGame\ChestGame.cs" />
     <Compile Include="Common\Pixel.cs" />
     <Compile Include="NewChestGame\Sides.cs" />
-    <Compile Include="NewChestGame\ViewChestInit.xaml.cs">
-      <DependentUpon>ViewChestInit.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="SaveData.cs" />
-    <Compile Include="UserActivityHook.cs" />
-    <Compile Include="WinApiClass.cs" />
+    <Compile Include="Common\SaveData.cs" />
+    <Compile Include="Common\UserActivityHook.cs" />
+    <Compile Include="Common\WinApiClass.cs" />
     <Page Include="FrameForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -95,14 +88,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Module.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="NewChestGame\ViewChestInit.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
