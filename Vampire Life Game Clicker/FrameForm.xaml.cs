@@ -8,9 +8,11 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Vampire_Life_Game_Clicker.Common;
 
 namespace Vampire_Life_Game_Clicker
 {
@@ -32,6 +34,7 @@ namespace Vampire_Life_Game_Clicker
         public FrameForm()
         {
             InitializeComponent();
+            
             ShowInTaskbar = false;
             Topmost = true;
             var colorBruses = Brushes.GreenYellow;
@@ -50,6 +53,16 @@ namespace Vampire_Life_Game_Clicker
             ChestGame.Foreground = Brushes.OrangeRed;
             ChestClicker.Content = "Chest Clicker: Disable";
             ChestClicker.Foreground = Brushes.OrangeRed;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowInteropHelper wndHelper = new WindowInteropHelper(this);
+
+            int exStyle = (int)WinApiClass.GetWindowLong(wndHelper.Handle, (int)WinApiClass.GetWindowLongFields.GWL_EXSTYLE);
+
+            exStyle |= (int)WinApiClass.ExtendedWindowStyles.WS_EX_TOOLWINDOW;
+            WinApiClass.SetWindowLong(wndHelper.Handle, (int)WinApiClass.GetWindowLongFields.GWL_EXSTYLE, (IntPtr)exStyle);
         }
 
         public void SetBloodGameActive(bool active)
@@ -98,12 +111,14 @@ namespace Vampire_Life_Game_Clicker
         {
             if (enabled)
             {
+                this.Visibility = Visibility.Visible;
                 ChestGame.Visibility = Visibility.Visible;
                 ChestClicker.Visibility = Visibility.Visible;
                 BloodGame.Visibility = Visibility.Visible;
             }
             else
             {
+                this.Visibility = Visibility.Hidden;
                 ChestGame.Visibility = Visibility.Hidden;
                 ChestClicker.Visibility = Visibility.Hidden;
                 BloodGame.Visibility = Visibility.Hidden;
@@ -119,10 +134,6 @@ namespace Vampire_Life_Game_Clicker
 
         public void SetNewRectangle(double x1, double y1, double x2, double y2)
         {
-            //x1 += 7;
-            //y1 += 7;
-            //x2 += 7;
-            //y2 = (x2-x1)+y1;
             _line1.X1 = x1;
             _line1.Y1 = y1;
             _line1.X2 = x1;

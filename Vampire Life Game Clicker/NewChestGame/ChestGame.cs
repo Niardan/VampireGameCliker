@@ -17,27 +17,39 @@ namespace Vampire_Life_Game_Clicker.NewChestGame
         private readonly Pixel _imageLeft;
         private readonly Pixel _imageRight;
         private readonly Pixel _cursor;
-        private string _pathForImage = @"z:\Vampire Life 0.51.2plus\www\img\chaincmd\";
+
 
         public ChestGame(ImageWorker imageWorker, UserActivityHook actHook, WinApiClass apiClass, SaveData saveData, FrameForm form) : base(imageWorker, actHook, apiClass, saveData, form)
         {
-            var imageDown = new Bitmap(_pathForImage + "down.png");
-            var imageUp = new Bitmap(_pathForImage + "up.png");
-            var imageLeft = new Bitmap(_pathForImage + "left.png");
-            var imageRight = new Bitmap(_pathForImage + "right.png");
-            var cursor = new Bitmap(_pathForImage + "cursor.png");
+            //string _pathForImage = @"z:\Vampire Life 0.51.2plus\www\img\chaincmd\";
+            //var imageDown = new Bitmap(_pathForImage + "down.png");
+            //var imageUp = new Bitmap(_pathForImage + "up.png");
+            //var imageLeft = new Bitmap(_pathForImage + "left.png");
+            //var imageRight = new Bitmap(_pathForImage + "right.png");
+            //var cursor = new Bitmap(_pathForImage + "cursor.png");
 
-            int offset = 70;
-            var bytePixel = GetColorPixel(imageUp, offset);
-            _imageUp = new Pixel(bytePixel[0], bytePixel[1], bytePixel[2], bytePixel[3]);
-            bytePixel = GetColorPixel(imageDown, offset);
-            _imageDown = new Pixel(bytePixel[0], bytePixel[1], bytePixel[2], bytePixel[3]);
-            bytePixel = GetColorPixel(imageLeft, offset);
-            _imageLeft = new Pixel(bytePixel[0], bytePixel[1], bytePixel[2], bytePixel[3]);
-            bytePixel = GetColorPixel(imageRight, offset);
-            _imageRight = new Pixel(bytePixel[0], bytePixel[1], bytePixel[2], bytePixel[3]);
-            bytePixel = GetColorPixel(cursor, offset);
-            _cursor = new Pixel(bytePixel[0], bytePixel[1], bytePixel[2], bytePixel[3]);
+            //int offset = 70;
+            //  var bytePixel = GetColorPixel(imageUp, offszet);
+            //_imageUp = new Pixel(bytePixel[0], bytePixel[1], bytePixel[2], bytePixel[3]);
+            //bytePixel = GetColorPixel(imageDown, offset);
+            //_imageDown = new Pixel(bytePixel[0], bytePixel[1], bytePixel[2], bytePixel[3]);
+            //bytePixel = GetColorPixel(imageLeft, offset);
+            //_imageLeft = new Pixel(bytePixel[0], bytePixel[1], bytePixel[2], bytePixel[3]);
+            //bytePixel = GetColorPixel(imageRight, offset);
+            //_imageRight = new Pixel(bytePixel[0], bytePixel[1], bytePixel[2], bytePixel[3]);
+            //var bytePixel = GetColorPixel(cursor, offset);
+            // _cursor = new Pixel(bytePixel[0], bytePixel[1], bytePixel[2], bytePixel[3]);
+            //saveData.SetArrow("up", _imageUp);
+            //saveData.SetArrow("down", _imageDown);
+            //saveData.SetArrow("left", _imageLeft);
+            //saveData.SetArrow("cursor", _cursor);
+            //SaveData.Save(_saveData);
+
+            _imageDown = saveData.GetArrow("down");
+            _imageUp = saveData.GetArrow("up");
+            _imageRight = saveData.GetArrow("right");
+            _imageLeft = saveData.GetArrow("left");
+            _cursor = saveData.GetArrow("cursor");
         }
 
         private byte[] GetColorPixel(Image image, int offset)
@@ -76,11 +88,11 @@ namespace Vampire_Life_Game_Clicker.NewChestGame
             var confines = GetСonfines(point, 50);
             int min = confines.Item1;
             int max = confines.Item2;
-            if (min <= 0 || max <= 0|| min >= max)
+            if (min <= 0 || max <= 0 || min >= max)
             {
                 return;
             }
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 30; i++)
             {
                 var screenImage = _imageWorker.GetImage(min, point.Y - 25, max, point.Y + 25);
                 var image = _imageWorker.GetToBuffer(screenImage);

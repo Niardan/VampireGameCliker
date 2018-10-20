@@ -117,4 +117,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>COPY "$(ProjectDir)save.dat" "$(TargetDir)" /Y /Z</PreBuildEvent>
+  </PropertyGroup>
 </Project>

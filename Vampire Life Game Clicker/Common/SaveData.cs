@@ -4,7 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using Point = System.Windows.Point;
 
 namespace Vampire_Life_Game_Clicker.Common
 {
@@ -12,12 +11,19 @@ namespace Vampire_Life_Game_Clicker.Common
     public class SaveData
     {
         private Dictionary<string, ColorData> _colors = new Dictionary<string, ColorData>();
-        private string _gamePath;
+        private Dictionary<string, Pixel> _arrows = new Dictionary<string, Pixel>();
 
-        public string GamePath
+
+        public void SetArrow(string name, Pixel pixel)
         {
-            get { return _gamePath; }
-            set { _gamePath = value; }
+            _arrows[name] = pixel;
+        }
+
+        public Pixel GetArrow(string name)
+        {
+            Pixel pixel;
+            _arrows.TryGetValue(name, out pixel);
+            return pixel;
         }
 
         public void SetColor(string name, Color color, bool active)
@@ -61,9 +67,7 @@ namespace Vampire_Life_Game_Clicker.Common
         public static bool Load(out SaveData saveData)
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            SaveData data;
             FileStream fs = new FileStream("save.dat", FileMode.OpenOrCreate);
-            bool success;
             try
             {
                 saveData = (SaveData) formatter.Deserialize(fs);
