@@ -27,7 +27,6 @@
 
         <WrapPanel Grid.Row="2">
             <Label>Кровь:</Label>
-            <Button Name="BloodInitiationButton" Click="BloodInitiationButton_Click" Margin="5">Инициализация</Button>
             <Button Name="BloodStartGame" Click="BloodStartGame_OnClick" Margin="5" Padding="5">Start</Button>
         </WrapPanel>
         <Border BorderBrush="Black" BorderThickness="3" Grid.Row="3">
