@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Vampire_Life_Game_Clicker"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500"
-        Width="525" Closed="MainWindow_OnClosed">
+        Title="Vampire Life Game Clicker" Height="500"
+        Width="525" Closed="MainWindow_OnClosed" Icon="Vampire Clicker Icon.ico">
 
     <Grid>
         <Grid.RowDefinitions>

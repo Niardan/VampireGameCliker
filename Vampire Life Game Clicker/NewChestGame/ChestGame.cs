@@ -17,7 +17,7 @@ namespace Vampire_Life_Game_Clicker.NewChestGame
         private readonly Pixel _imageLeft;
         private readonly Pixel _imageRight;
         private readonly Pixel _cursor;
-        private string _pathForImage = @"z:\Vampire Life 0.51.2plus\www\img\chaincmd\";
+        private string _pathForImage = @"C:\Users\NIka\Desktop\Vampire Life 0.51.2plus\www\img\chaincmd\";
 
         public ChestGame(ImageWorker imageWorker, UserActivityHook actHook, WinApiClass apiClass, SaveData saveData, FrameForm form) : base(imageWorker, actHook, apiClass, saveData, form)
         {

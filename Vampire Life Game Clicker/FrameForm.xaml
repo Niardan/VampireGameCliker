@@ -13,11 +13,23 @@
         <Label Name="Message" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="25" Foreground="DeepSkyBlue" Background="Transparent" Margin="0,0,0,0"></Label>
       
         <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="myCanvas">
-            <StackPanel Name="PanelOverlay" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <Label Name="BloodGame" FontSize="36">Blood Game:</Label>
-                <Label Name="ChestGame" FontSize="36">Blood Game:</Label>
-                <Label Name="ChestClicker" FontSize="36">ChestCliker:</Label>
-            </StackPanel>
+            <Grid Name="PanelOverlay" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.Column="0" Grid.Row="0" Name="ChestGame" FontSize="14">Взлом сундуков</Label>
+                <ToggleButton Grid.Column="1" Grid.Row="0" Name="ChestBreak" Content="Включить" />
+                <Label Grid.Column="0" Grid.Row="1"  Name="BloodGame" FontSize="14">Кровь</Label>
+                <ToggleButton Grid.Column="1" Grid.Row="1" Name="BloodBreak" Content="Включить" />
+                <Label Grid.Column="0" Grid.Row="2"  Name="ChestClicker" FontSize="14">Открыть сундуки</Label>
+                <ToggleButton Grid.Column="1" Grid.Row="2" Name="ChestOpen" Content="Включить" />
+            </Grid>
         </Canvas>
         <Image HorizontalAlignment="Left" VerticalAlignment="Center" Name="ImageForm"></Image>
     </Grid>
